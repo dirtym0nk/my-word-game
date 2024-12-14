@@ -4,7 +4,12 @@
 
     <div v-for="(player, index) in players" :key="player.name" :class="{'current-player': index === currentPlayerIndex}">
       <h2>{{ player.name }}</h2>
-      <p>Очки: {{ player.score }}</p>
+      <p>Общее количество очков: {{ player.total }}</p>
+      <ul>
+        <li v-for="(score, letter) in player.scores" :key="letter">
+          {{ letter }}: {{ score }}
+        </li>
+      </ul>
       <div v-if="index === currentPlayerIndex">
         <p>Буква: {{ currentLetter }}</p>
         <button @click="updateScore(1)">+</button>
@@ -67,16 +72,9 @@ export default {
       this.$store.commit('setCurrentLetter', '');
     },
     endGame() {
-      const winner = this.players.reduce((max, player) => (player.score > max.score ? player : max), this.players[0]);
-      alert(`Победитель: ${winner.name} с ${winner.score} очками!`);
+      this.$store.commit('resetScores');
       this.$router.push('/');
     },
   },
 };
 </script>
-
-<style>
-.current-player {
-  background-color: lightyellow;
-}
-</style>
